@@ -1,20 +1,16 @@
-import mongoose from 'mongoose';
-import { User, ActivityLog, IUser } from './schema';
-import { cookies } from 'next/headers';
-import { verifyToken } from '@/lib/auth/session';
+import mongoose from "mongoose";
+import { User, ActivityLog, IUser } from "./schema";
+import { cookies } from "next/headers";
+import { verifyToken } from "@/lib/auth/session";
 
 export async function getUser() {
-  const sessionCookie = (await cookies()).get('session');
+  const sessionCookie = (await cookies()).get("session");
   if (!sessionCookie || !sessionCookie.value) {
     return null;
   }
 
   const sessionData = await verifyToken(sessionCookie.value);
-  if (
-    !sessionData ||
-    !sessionData.user ||
-    !sessionData.user.id
-  ) {
+  if (!sessionData || !sessionData.user || !sessionData.user.id) {
     return null;
   }
 
@@ -24,29 +20,29 @@ export async function getUser() {
 
   const user = await User.findOne({
     _id: new mongoose.Types.ObjectId(sessionData.user.id),
-    deletedAt: { $exists: false }
+    deletedAt: { $exists: false },
   });
 
   return user;
 }
 
-export async function getActivityLogs() {
-  const user = await getUser();
-  if (!user) {
-    throw new Error('User not authenticated');
-  }
+// export async function getActivityLogs() {
+//   const user = await getUser();
+//   if (!user) {
+//     throw new Error('User not authenticated');
+//   }
 
-  const logs = await ActivityLog.find({ userId: user._id })
-    .populate('userId', 'name email')
-    .sort({ timestamp: -1 })
-    .limit(10)
-    // .lean<IUser>();
+//   const logs = await ActivityLog.find({ userId: user._id })
+//     .populate('userId', 'name email')
+//     .sort({ timestamp: -1 })
+//     .limit(10)
+//     // .lean<IUser>();
 
-  return logs.map(log => ({
-    id: log._id.toString(),
-    action: log.action,
-    timestamp: log.timestamp,
-    ipAddress: log.ipAddress,
-    userName: log.userId?.name || log.userId?.email
-  }));
-}
+//   return logs.map(log => ({
+//     id: log._id.toString(),
+//     action: log.action,
+//     timestamp: log.timestamp,
+//     ipAddress: log.ipAddress,
+//     userName: log.userId?.name || log.userId?.email
+//   }));
+// }

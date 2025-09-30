@@ -7,7 +7,7 @@ import {
   ActivityLog,
   type NewUser,
   type NewActivityLog,
-  ActivityType,
+  // ActivityType,
 } from "@/lib/db/schema";
 import { comparePasswords, hashPassword, setSession } from "@/lib/auth/session";
 import { redirect } from "next/navigation";
@@ -18,18 +18,18 @@ import {
   validatedActionWithUser,
 } from "@/lib/auth/middleware";
 
-async function logActivity(
-  userId: string,
-  type: ActivityType,
-  ipAddress?: string
-) {
-  const newActivity: NewActivityLog = {
-    userId: new mongoose.Types.ObjectId(userId),
-    action: type,
-    ipAddress: ipAddress || "",
-  };
-  await ActivityLog.create(newActivity);
-}
+// async function logActivity(
+//   userId: string,
+//   type: ActivityType,
+//   ipAddress?: string
+// ) {
+//   const newActivity: NewActivityLog = {
+//     userId: new mongoose.Types.ObjectId(userId),
+//     action: type,
+//     ipAddress: ipAddress || "",
+//   };
+//   await ActivityLog.create(newActivity);
+// }
 
 const signInSchema = z.object({
   email: z.string().email().min(3).max(255),
@@ -60,7 +60,7 @@ export const signIn = validatedAction(signInSchema, async (data, formData) => {
 
   await Promise.all([
     setSession(user),
-    logActivity(user._id.toString(), ActivityType.SIGN_IN),
+    // logActivity(user._id.toString(), ActivityType.SIGN_IN),
   ]);
 
   redirect("/extraction");
@@ -100,7 +100,7 @@ export const signUp = validatedAction(signUpSchema, async (data, formData) => {
   }
 
   await Promise.all([
-    logActivity(createdUser._id.toString(), ActivityType.SIGN_UP),
+    // logActivity(createdUser._id.toString(), ActivityType.SIGN_UP),
     setSession(createdUser),
   ]);
 
@@ -109,7 +109,7 @@ export const signUp = validatedAction(signUpSchema, async (data, formData) => {
 
 export async function signOut() {
   const user = (await getUser()) as User;
-  await logActivity(user._id.toString(), ActivityType.SIGN_OUT);
+  // await logActivity(user._id.toString(), ActivityType.SIGN_OUT);
   (await cookies()).delete("session");
 }
 
@@ -160,7 +160,7 @@ export const updatePassword = validatedActionWithUser(
 
     await Promise.all([
       User.findByIdAndUpdate(user._id, { passwordHash: newPasswordHash }),
-      logActivity(user._id.toString(), ActivityType.UPDATE_PASSWORD),
+      // logActivity(user._id.toString(), ActivityType.UPDATE_PASSWORD),
     ]);
 
     return {
@@ -186,7 +186,7 @@ export const deleteAccount = validatedActionWithUser(
       };
     }
 
-    await logActivity(user._id.toString(), ActivityType.DELETE_ACCOUNT);
+    // await logActivity(user._id.toString(), ActivityType.DELETE_ACCOUNT);
 
     // Soft delete
     await User.findByIdAndUpdate(user._id, {
@@ -211,7 +211,7 @@ export const updateAccount = validatedActionWithUser(
 
     await Promise.all([
       User.findByIdAndUpdate(user._id, { name, email }),
-      logActivity(user._id.toString(), ActivityType.UPDATE_ACCOUNT),
+      // logActivity(user._id.toString(), ActivityType.UPDATE_ACCOUNT),
     ]);
 
     return { name, success: "Account updated successfully." };
