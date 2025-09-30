@@ -2,6 +2,7 @@ import "./globals.css";
 import type { Metadata, Viewport } from "next";
 import { Manrope } from "next/font/google";
 import { SWRConfig } from "swr";
+import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
   title: "PDF to JSON Converter",
@@ -20,19 +21,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html
-      lang="en"
-      className={`bg-white dark:bg-gray-950 text-black dark:text-white ${manrope.className}`}
-    >
+    <html lang="en" className={`bg-white dark:bg-gray-950 text-black dark:text-white ${manrope.className}`}>
       <body className="min-h-[100dvh] bg-gray-50">
-        <SWRConfig
-          value={{
-            fallback: {
-              // Removed getUser() call that was causing serialization error
-            },
-          }}
-        >
+        <SWRConfig value={{ fallback: {} }}>
           {children}
+          <Toaster position="top-center" richColors />
         </SWRConfig>
       </body>
     </html>

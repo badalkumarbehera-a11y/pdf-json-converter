@@ -5,9 +5,10 @@ import { toast } from "sonner";
 import { FileUp, Upload, Download, FileText, Copy, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { processPDFWithSchema } from "./actions";
+// import { processPDFWithSchema } from "./actions";
+import { processPDFWithSchema } from "@/lib/ai-agent/agent";
 
-export default function Dashboard() {
+export default function Extraction() {
   const [files, setFiles] = useState<File[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [convertedData, setConvertedData] = useState<any>(null);
@@ -56,10 +57,19 @@ export default function Dashboard() {
       );
 
       if (result.success) {
-        setConvertedData({
-          filename: result.filename,
-          extractedData: result.data,
-        });
+        // setConvertedData(
+        //   // filename: result.filename,
+        //   // extractedData: result.data,
+        //   result.data
+        // );
+
+        const extracted = result.data;
+        setConvertedData(
+          Array.isArray(extracted) && extracted.length === 1
+            ? extracted[0]
+            : extracted
+        );
+        toast.success("PDF converted to JSON successfully!");
         toast.success("PDF converted to JSON successfully!");
       } else {
         toast.error(result.error || "Failed to process PDF");

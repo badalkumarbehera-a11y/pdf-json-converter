@@ -4,7 +4,7 @@ This is a starter template for building a SaaS application using **Next.js** wit
 
 ## Features
 
-- Simple dashboard page (`/dashboard`) 
+- Simple extraction page (`/extraction`) 
 - User authentication with email/password
 - MongoDB database with Mongoose ODM
 - Basic RBAC with Owner and Member roles
@@ -80,7 +80,7 @@ When you're ready to deploy your SaaS application to production:
 ## Project Structure
 
 - `app/(login)/` - Authentication pages (sign-in, sign-up)
-- `app/(dashboard)/dashboard/` - Dashboard page
+- `app/(dashboard)/extraction/` - Extraction page
 - `lib/db/` - Database configuration and models
 - `lib/auth/` - Authentication utilities
 - `components/ui/` - UI components

@@ -3,6 +3,8 @@
 "use server";
 
 import OpenAI from "openai";
+import { getUser } from "../db/queries";
+
 
 // Initialize OpenAI client
 const client = new OpenAI({
@@ -23,6 +25,12 @@ export const processPDFWithSchema = async (
   fileName: string,
   schema?: string
 ) => {
+
+  const user = await getUser();
+  if (!user) {
+    throw new Error("Unauthorized: User must be logged in");
+  }
+
   try {
     // 1️⃣ Upload the PDF to OpenAI
     const fileUpload = await client.files.create({
