@@ -1,10 +1,7 @@
-
-
 "use server";
 
 import OpenAI from "openai";
 import { getUser } from "../db/queries";
-
 
 // Initialize OpenAI client
 const client = new OpenAI({
@@ -25,7 +22,6 @@ export const processPDFWithSchema = async (
   fileName: string,
   schema?: string
 ) => {
-
   const user = await getUser();
   if (!user) {
     throw new Error("Unauthorized: User must be logged in");
@@ -51,7 +47,8 @@ export const processPDFWithSchema = async (
 
     // 3️⃣ Call responses.create with the file attached
     const response = await client.responses.create({
-      model: "gpt-4.1", // or "gpt-5" if you have access
+      // model: "gpt-4.1", // or "gpt-5" if you have access
+      model: "gpt-5-mini", // or "gpt-5" if you have access
       input: [
         {
           role: "system",

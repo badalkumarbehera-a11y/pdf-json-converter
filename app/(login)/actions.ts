@@ -4,7 +4,7 @@ import { z } from "zod";
 import mongoose from "mongoose";
 import {
   User,
-  ActivityLog,
+  // ActivityLog,
   type NewUser,
   type NewActivityLog,
   // ActivityType,
